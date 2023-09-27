@@ -2,8 +2,12 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { Neo4jGraphQL } from "@neo4j/graphql";
 import neo4j from "neo4j-driver";
+<<<<<<< HEAD
 
 
+=======
+import dotenv from "dotenv";
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
 
 const typeDefs = `#graphql
   type Customer {
@@ -14,17 +18,26 @@ const typeDefs = `#graphql
       checkInDate: DateTime!
       loyaltyCoins: Int
       visits: [Visit!]! @relationship(type: "VISITED", direction: OUT)
+<<<<<<< HEAD
     }
+=======
+      }
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
 
   type Visit {
       id: ID!
       date: DateTime!
       customer: Customer @relationship(type: "VISITED", direction: IN)
+<<<<<<< HEAD
     }
+=======
+      }
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
   
   type Query {
       customersCheckedInToday(startOfDay: DateTime!, endOfDay: DateTime!): [Customer]
     }
+<<<<<<< HEAD
   
   type Reward {
       rewardID: ID!
@@ -46,11 +59,25 @@ const typeDefs = `#graphql
 const driver = neo4j.driver(
   "bolt://127.0.0.1:7687",
   neo4j.auth.basic("neo4j", "passwordhere"),
+=======
+  type Mutation {
+      checkInCustomer(phoneNumber: String!): Visit
+      createNewCustomer(phoneNumber: String!, firstName: String!, lastName: String!): Customer
+      }`;
+
+const driver = neo4j.driver(
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD),
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
   { encrypted: 'ENCRYPTION_OFF'}
 );
 
 console.log("Driver initialized:", !!driver);
+<<<<<<< HEAD
 console.log(process.env.NEO4J_URI, process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
+=======
+
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
 
 const customResolvers = {
   Mutation: {
@@ -88,6 +115,7 @@ const customResolvers = {
       return null;
     }
   },
+<<<<<<< HEAD
   
   Query: {
     rewardRedemption: async (_, { phoneNumber, rewardID, rewardCost }, context) => {
@@ -119,6 +147,8 @@ const customResolvers = {
       }
   }},
 
+=======
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
   Query: {
     customersCheckedInToday: async (_, { startOfDay, endOfDay }, context) => {
       const session = context.driver.session();
@@ -155,7 +185,11 @@ const customResolvers = {
         session.close();
       }
     }
+<<<<<<< HEAD
   },
+=======
+  }
+>>>>>>> d3e6a37b59451f9b834d3c76b46c03ee1ebff728
 };
 
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver, resolvers: customResolvers });
