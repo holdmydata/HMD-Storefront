@@ -1,49 +1,118 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CHECK_IN_CUSTOMER } from '../queries/queryCheckInCustomer';
+import { useRedeemReward } from './RedeemReward';
+import Modal from './Modal';
 
-function CheckInForm() {
+
+function CheckInForm({onRefetch}) {
+
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
   const [checkInCustomer] = useMutation(CHECK_IN_CUSTOMER);
+  const [customerInfo, setCustomerInfo] = useState(null);
+  const { redeem } = useRedeemReward();
+  const [modalContent, setModalContent] = useState(null);
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await checkInCustomer({ variables: { phoneNumber: phoneNumber } });
-      setShowPopup(true);
-      // Handle success, maybe clear the form or show a success message
+      const response = await checkInCustomer({ variables: { phoneNumber: phoneNumber } });
+      console.log(response?.data);
+      if (response?.data?.checkInCustomer) {  
+        const customer = response.data.checkInCustomer.customer;
+        console.log('Customer before:', customer);
+        setCustomerInfo(customer);
+        console.log('Customer after:', customerInfo);
+        const customerLoyaltyCoins = customer.loyaltyCoins;
+
+        if (customerLoyaltyCoins >= 100) {
+          console.log('Customer has enough loyalty coins to redeem a reward!');
+          setModalContent(
+            <div>
+              <p>Customer has enough loyalty coins to redeem a reward!</p>
+              <button onClick={() => handleRedeem(customer)} className='bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full'>Redeem Now</button>
+              <button onClick={handleClose} className='bg-pink-600 hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2'>Close</button>
+            </div>
+          );
+          openModal();
+        } else {
+          console.log('Customer does not have enough loyalty coins to redeem a reward.');
+          setModalContent(
+            <div>
+              <p className='text-md font-medium'>Customer checked in!</p>
+              <button onClick={handleClose} className='bg-pink-600 hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2'>Close</button>
+            </div>
+          );
+          openModal();
+        }
+      } else {
+        console.error('Customer data is not available');
+      }
     } catch (error) {
-      // Handle error
       console.error("Error checking in customer:", error);
+      console.error("Error details:", error.message, error.stack);
+    }
+  };
+
+  const handleRedeem = async (customer) => {
+
+    console.log('Redeeming reward for customer:', customer)
+    if (customer) {
+      try {
+        const redeemData = await redeem( customer.phoneNumber, "1" );
+        console.log('Redeem data before:', redeemData)
+
+        setModalContent(
+        <div>
+        <p>🥳{redeemData.customer.firstName} redeemed {redeemData.reward.name}!🙌</p>
+        <p>{redeemData.customer.firstName} now has {redeemData.customer.loyaltyCoins} coins remaining!</p>
+        <button onClick={handleClose} className='bg-pink-600 hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2'>Close</button>
+        </div>
+        );
+        openModal();
+      } catch (error) {
+        // Handle error
+        console.error("Error redeeming reward:", error);
+      }
+    }
+  };
+
+  const handleClose = () => {
+
+    if ( onRefetch ) {
+      onRefetch();
+      setCustomerInfo(null);
+      closeModal();
+
     }
   };
 
   return (
-    <div className="p-4 shadow-lg border rounded bg-white flex">
-      <h2 className="text-xl mb-4 flex-grow">Check In Customer</h2>
+    // <div className="p-4 py-6 shadow-lg border rounded-xl bg-white mx-auto max-w-7xl sm:px-6 lg:px-8">
+    <>
       <form onSubmit={handleSubmit}>
+        <span className=" z-10 h-full leading-snug font-normal text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
+          <i className="fas fa-search"></i>
+        </span>
         <input 
           type="text" 
           placeholder="Phone Number" 
           value={phoneNumber} 
           onChange={(e) => setPhoneNumber(e.target.value)}
-          className="p-2 border rounded flex-grow, max-w-full"
+          className="p-2 border flex-grow max-w-fullborder-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus: ring-purple-900 w-full pl-10"
+          
         />
-        <button type="submit" className="ml-2 p-2 bg-blue-500 text-white rounded">
-          Check In
-        </button>
       </form>
-      {showPopup && (
-        <div className="absolute top-0 left-0 w-full h-full bg-transparent bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-4 rounded shadow-lg">
-            <p className="text-xl">Customer Checked In!</p>
-            <button onClick={() => setShowPopup(false)} className='rounded '>Close</button>
-          </div>
-        </div>
-      )}
-    </div>
+      <Modal isOpen={isModalOpen} closeModal={handleClose}>
+        {modalContent}
+      </Modal>
+    </>
   );
 }
+ 
 
 export default CheckInForm;

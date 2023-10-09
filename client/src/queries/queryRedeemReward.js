@@ -1,14 +1,17 @@
-import { gql } from "apollo-server";
+import { gql } from "@apollo/client";
 
-/* Deduct points and return reward node. */
 export const REWARD_REDEMPTION = gql`
-    mutation RewardRedemption($phoneNumber: String!, $rewardId: ID!) {
-        rewardRedemption(phoneNumber: $phoneNumber, rewardId: $rewardId) {
-            id
-            firstName
-            lastName
-            phoneNumber
-            loyaltyCoins
-        }
+mutation RedeemReward($phoneNumber: String!, $rewardNumber: String!) {
+    rewardRedemption(phoneNumber: $phoneNumber, rewardNumber: $rewardNumber) {
+      reward {
+        rewardNumber
+        name
+      }
+      customer {
+        id
+        firstName
+        loyaltyCoins
+      }
     }
+  }
 `;

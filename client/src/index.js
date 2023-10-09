@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import App from './App';
-import ReactDOM from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const client = new ApolloClient({
@@ -8,11 +8,12 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-ReactDOM.render(
+const root = createRoot(document.getElementById('root'));
+
+root.render(
   <ApolloProvider client={client}>
     <App />
-  </ApolloProvider>,
-  document.getElementById('root')
+  </ApolloProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

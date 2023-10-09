@@ -1,9 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("//fonts.googleapis.com/css?family=Inter+Tight" );
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+
 
 .App {
   text-align: center;
+  
 }
 
 .App-logo {
@@ -21,6 +26,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: "Inter+Tight", sans-serif;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -33,10 +39,12 @@
 display: flex;
 flex-direction: column;
 font-weight: normal;
+font-family: "Gabarito", sans-serif;
 }
 
 .sidebar-footer {
   margin-top: auto;
+  
 }
 
 .main-content {

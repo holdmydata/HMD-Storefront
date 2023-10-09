@@ -1,66 +1,53 @@
 import React from "react";
 import CustomerResults from "../components/CustomerResults"
-import {gql, useQuery} from "@apollo/client";
-import CheckInForm from "../components/CheckInForm";
+//import ChartTemplate from "../components/ChartTemplate";
+// import CheckInForm from "../components/CheckInForm";
 
+function Dashboard(refetchTrigger) {
 
-const GET_CUSTOMERS_QUERY = gql`
-query CustomersCheckedInToday($startOfDay: DateTime!, $endOfDay: DateTime!) {
-  customers(where: { visits_SOME: { date_GTE: $startOfDay, date_LTE: $endOfDay } }) {
-    id
-    firstName
-    lastName
-    phoneNumber
-    visits(where: { date_GTE: $startOfDay, date_LTE: $endOfDay }) {
-      date
-    }
-    loyaltyCoins
-  }
-}`;
-
-function Dashboard() {
-
-  const TODAY = new Date().toISOString().split('T')[0];
-  const START_OF_DAY = `${TODAY}T00:00:00Z`;
-  const END_OF_DAY = `${TODAY}T23:59:59Z`;
-  
-  const { loading, error, data } = useQuery(GET_CUSTOMERS_QUERY, {
-      variables: {
-          startOfDay: START_OF_DAY,
-          endOfDay: END_OF_DAY
-      },
-      fetchPolicy: "no-cache"
-  });
-
-    if (loading) 
-        return <p>Loading...</p>;
-    if (error) 
-        return <p>Error: {
-            error.message
-        }</p>;
-   
-    return (
-      <>
-      <div className={`relative md:ml-64 `}>
-        <div className="flex flex-col z-auto">
-            {/* <div className="w-1/2 p-4">
-                <h2>Welcome Quad</h2>
-            </div> */}
-            <div className="w-1/2 p-4">
-                <CheckInForm/>
+    // const handleRefetch = () => {
+    //     setRefetchTrigger(prev => prev + 1);
+    // };
+    return (<>
+        <div className={`relative md:ml-64 `}> {/* KPIs */}
+            <div className="container max-w-4xl px-4 mx-auto my-4">
+                <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="text-center space-y-2 sm:text-left">
+                        <div className="p-5 bg-white rounded shadow-md">
+                            <div className="space-y-0.5">
+                                <p className="text-md flex flex-auto text-black justify-center font-inter sm:text-lg ">Customers Today</p>
+                                <p className="text-gray-500 font-medium text-2xl justify-center flex flex-auto">420</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="text-center space-y-2 sm:text-left">
+                        <div className="p-5 bg-white rounded shadow-md">
+                            <div className="space-y-0.5">
+                                <p className="text-md flex flex-auto text-black justify-center font-thin sm:text-lg ">Rewards Today</p>
+                                <p className="text-gray-500 text-2xl justify-center font-medium flex flex-auto">69</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/* <div className="text-center space-y-2 sm:text-left">
+                            <div className="p-5 bg-white rounded shadow-md">
+                                <div className="space-y-0.5">
+                                    <p className="text-md text-black font-semibold">Customers Today</p>
+                                    <p className="text-gray-500 font-medium text-lg flex flex-auto">420</p>
+                                </div>
+                            </div>
+                        </div> */} </div>
             </div>
-            <div className="p-4">
-                <CustomerResults customers={
-                    data ? data.customers : []
-                }/>
+            <div className="flex flex-col z-automx-auto max-w-7xl py-2 bg-white rounded-xl m-4 sm:px-6 lg:px-8">
+
+                <div className="p-4">
+                    <CustomerResults refetchTrigger={refetchTrigger}/>
+                </div>
+                {/* <div className="p-4">
+                    <ChartTemplate />
+                </div> */}
             </div>
-            {/* <div className="w-1/2 p-4">
-                <h2>Misc?</h2>
-            </div> */}
         </div>
-      </div>
-      </>
-    );
+    </>);
 };
 
 export default Dashboard;
