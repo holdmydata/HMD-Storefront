@@ -76,27 +76,27 @@ function CreateCustomerForm({onSuccess, onError, onRefetch}) {
         <>
             <div className='p-2 m-2 lg:columns-2 sm:flex-auto md:flex-shrink sm:flex-shrink items-center sm:columns-1'>
                 <form onSubmit={handleSubmit} className='w-full max-w-lg'>
-                <input type="text" name="firstName"
+                <input type="text" name="firstName" id="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
                     placeholder="First Name"
                     className = {inputClassName} />
-                <input type="text" name="lastName"
+                <input type="text" name="lastName" id='lastName'
                     value={formData.lastName}
                     onChange={handleChange}
                     placeholder="Last Name"
                     className = {inputClassName} />
-                <input type="text" name="phoneNumber"
+                <input type="text" name="phoneNumber" id="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
                     placeholder="Phone Number"
                     className = {inputClassName} />
-                <input type="text" name="email"
+                <input type="text" name="email" id="email"
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Email"
                     className = {inputClassName} />
-                <input type="date" name="birthday"
+                <input type="date" name="birthday" id="birthday"   
                     value={formData.birthday}
                     onChange={handleChange}
                     placeholder="Birthday"

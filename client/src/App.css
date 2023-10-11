@@ -52,6 +52,13 @@ font-family: "Gabarito", sans-serif;
   flex-direction: column;
   flex-grow: 1;
   min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.main-content.open {
+  margin-left: 250px;
 }
 
 .background-image {
@@ -62,4 +69,47 @@ font-family: "Gabarito", sans-serif;
   width: 100%;
   height: 100%;
   z-index: -1;
+}
+
+/* Default styles for large screens */
+.sidebar {
+  width: 20px;
+  float: left;
+}
+
+.main-content {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.main-content.open {
+  margin-left: 250px;
+  margin-right: 20px;
+}
+
+/* Adjust styles for medium screens */
+@media (max-width: 800px) {
+  .sidebar {
+      width: 20px;
+  }
+
+  .main-content {
+      margin-left: 220px; /* Adjusted for the smaller sidebar */
+  }
+}
+
+/* Adjust styles for small screens */
+@media (max-width: 600px) {
+  .sidebar {
+      display: none;
+  }
+
+  .main-content {
+      margin-left: 0; /* No sidebar to the left, so no margin needed */
+  }
+
+  .main-content.open {
+      margin-left: 0;
+  }
+
 }

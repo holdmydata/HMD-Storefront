@@ -28,12 +28,13 @@ function CheckInForm({onRefetch}) {
         setCustomerInfo(customer);
         console.log('Customer after:', customerInfo);
         const customerLoyaltyCoins = customer.loyaltyCoins;
+        const customerFirstName = customer.firstName;
 
         if (customerLoyaltyCoins >= 100) {
           console.log('Customer has enough loyalty coins to redeem a reward!');
           setModalContent(
             <div>
-              <p>Customer has enough loyalty coins to redeem a reward!</p>
+              <p>🥳{customer.firstName} has enough loyalty coins to redeem a reward!</p>
               <button onClick={() => handleRedeem(customer)} className='bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full'>Redeem Now</button>
               <button onClick={handleClose} className='bg-pink-600 hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2'>Close</button>
             </div>
@@ -43,7 +44,7 @@ function CheckInForm({onRefetch}) {
           console.log('Customer does not have enough loyalty coins to redeem a reward.');
           setModalContent(
             <div>
-              <p className='text-md font-medium'>Customer checked in!</p>
+              <p className='text-md font-medium'>🥳{customerFirstName} checked in!</p>
               <button onClick={handleClose} className='bg-pink-600 hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2'>Close</button>
             </div>
           );
@@ -99,7 +100,7 @@ function CheckInForm({onRefetch}) {
           <i className="fas fa-search"></i>
         </span>
         <input 
-          type="text" 
+          type="tel" 
           placeholder="Phone Number" 
           value={phoneNumber} 
           onChange={(e) => setPhoneNumber(e.target.value)}

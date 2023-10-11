@@ -16,7 +16,7 @@ export default function Header({
                     src={logo}>
                     </img>
             </div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h2 className="mt-6 py-4 text-center text-3xl font-extrabold text-gray-900">
                 {heading}
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 mt-5">

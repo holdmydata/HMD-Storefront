@@ -37,7 +37,7 @@ const typeDefs = `#graphql
   
   type Query {
       customersCheckedInToday(startOfDay: DateTime!, endOfDay: DateTime!): [Customer]
-
+      searchCustomer(phoneNumber: String!): [Customer]
     }
   
   type Reward {
@@ -66,7 +66,7 @@ const typeDefs = `#graphql
       rewardRedemption(phoneNumber: String!, rewardNumber: String!): RewardRedemption
     }`;
 
-const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "VelvetVapor2023!"), {encrypted: 'ENCRYPTION_OFF'});
+const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "1234!"), {encrypted: 'ENCRYPTION_OFF'});
 
 console.log("Driver initialized:", !! driver);
 console.log(process.env.NEO4J_URI, process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
@@ -139,6 +139,7 @@ const customResolvers = {
                     date: visit.date,
                     customer: {
                         id: customer.id,
+                        firstName: customer.firstName,
                         phoneNumber: customer.phoneNumber,
                         loyaltyCoins: customer.loyaltyCoins,
                         checkInDate: customer.checkInDate
@@ -311,6 +312,42 @@ const customResolvers = {
 
                 return processedResult;
             } finally {
+                session.close();
+            }
+        },
+
+        searchCustomer: async (_, {
+            phoneNumber
+    }, context) => {
+            const session = context.driver.session();
+            console.log("Search Customer phoneNumber:", phoneNumber);
+            try {
+                const result = await session.run(`
+            MATCH (c:Customer {phoneNumber: $phoneNumber})
+            RETURN c
+        `, {phoneNumber});
+
+                // Process the result
+                const processedResult = result.records.map(record => {
+                    const customer = record.get('c').properties;
+                    // console.log("Customer ID:", customer.id);
+                    return {
+                        id: customer.id,
+                        firstName: customer.firstName,
+                        lastName: customer.lastName,
+                        phoneNumber: customer.phoneNumber,
+                        checkInDate: customer.checkInDate, // Convert to string?
+                        loyaltyCoins: customer.loyaltyCoins,
+                        // Add any other customer fields you want here
+                    };
+                });
+
+                return processedResult;
+            } catch (error) {
+                console.error("Error in searchCustomer:", error);
+                throw error;
+            }
+            finally {
                 session.close();
             }
         }

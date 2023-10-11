@@ -1,5 +1,6 @@
 import React from "react";
-import CustomerResults from "../components/CustomerResults"
+// import CustomerResults from "../components/CustomerResults"
+import FrontpageChart from "../components/FrontpageChart";
 //import ChartTemplate from "../components/ChartTemplate";
 // import CheckInForm from "../components/CheckInForm";
 
@@ -9,9 +10,10 @@ function Dashboard(refetchTrigger) {
     //     setRefetchTrigger(prev => prev + 1);
     // };
     return (<>
-        <div className={`relative md:ml-64 `}> {/* KPIs */}
-            <div className="container max-w-4xl px-4 mx-auto my-4">
-                <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+     <div className="flex flex-grow items-center sm:min-w-full"> {/* Adjusted this line */}
+        <div className={`relative w-full flex-grow`}> {/* KPIs */}
+            <div className="container max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto my-4">
+                <div className="grid gap-7 overflow-hidden sm:grid-cols-1 lg:grid-cols-2">
                     <div className="text-center space-y-2 sm:text-left">
                         <div className="p-5 bg-white rounded shadow-md">
                             <div className="space-y-0.5">
@@ -39,14 +41,15 @@ function Dashboard(refetchTrigger) {
             </div>
             <div className="flex flex-col z-automx-auto max-w-7xl py-2 bg-white rounded-xl m-4 sm:px-6 lg:px-8">
 
-                <div className="p-4">
-                    <CustomerResults refetchTrigger={refetchTrigger}/>
-                </div>
                 {/* <div className="p-4">
-                    <ChartTemplate />
+                    <CustomerResults refetchTrigger={refetchTrigger}/>
                 </div> */}
+                <div className="p-4">
+                    <FrontpageChart />
+                </div>
             </div>
         </div>
+    </div>
     </>);
 };
 

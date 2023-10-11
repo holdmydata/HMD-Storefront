@@ -7,6 +7,7 @@ export const CHECK_IN_CUSTOMER = gql`
       date
       customer {
         id
+        firstName
         phoneNumber
         loyaltyCoins
         checkInDate
