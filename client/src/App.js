@@ -8,7 +8,8 @@ import Sidebar from "./components/Sidebar";
 import backgroundImage from "./assets/img/app-bg-dark.png";
 import Login from "./views/Login";
 import BottomBar from "./components/BottomBar";
-
+import AppHeader from "./components/AppHeader";
+// import Tabs from "./components/Tabs";
 
 
 function App() {
@@ -42,17 +43,20 @@ function App() {
   }, []);
 
   return (
-
+    
     <Router>
-  <div className="app-container"> 
-  <img src= {backgroundImage}  alt="Background" className="background-image bg-grid-slate-900/[0.04]" />
-  {!isMobileView && (<button className={`fixed top-0 left-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent  rounded ${isCollapsed ? 'text-white' : 'text-b'} z-50`} 
-    type="button"
-    onClick={toggleSidebar}>
-    <i className={`fas ${isCollapsed ? 'fa-bars' : ''}`}></i>
-</button>)}
+    <AppHeader />
+    
   {!isModalOpen && !isMobileView && <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} refetchTrigger={refetchTrigger} onRefetch={handleRefetch} className="sidebar-footer"/>}
   {isMobileView && <BottomBar />}
+    {/* {!isModalOpen && isMobileView && <Tabs  refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} */}
+    <div className="app-container"> 
+    <img src= {backgroundImage}  alt="Background" className="background-image bg-grid-slate-900/[0.04]" />
+<button className={`fixed top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent  rounded ${isCollapsed ? 'text-stone-700' : 'text-stone-600'} z-0`} 
+      type="button"
+      onClick={toggleSidebar}>
+      <i className={`fas ${isCollapsed ? 'fa-bars' : 'fa-times'}`}></i>
+    </button>
     <div className={`main-content ${isCollapsed ? '' : 'open'}`}>
         <Routes>
           <Route path="/" element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} />

@@ -32,7 +32,7 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                 }`
             }>
                 <nav className="fixed bottom-0 left-0 md:left-0 md:top-0 md:bottom-auto overflow-y-auto flex-row  overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between w-full md:w-64 z-10 py-4 px-6 md:block">
-                    <button className={`absolute top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent rounded ${isCollapsed ? 'text-white' : 'text-black'} z-20`}
+                    <button className={`absolute top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent rounded ${isCollapsed ? 'text-stone-900' : 'text-stone-600'} `}
                         type="button"
                         onClick={toggleSidebar}>
                         <i className={`fas ${isCollapsed ? 'fa-bars' : 'fa-times'}`}></i>

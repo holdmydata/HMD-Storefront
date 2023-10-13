@@ -23,7 +23,7 @@ export default function Header({
             {paragraph} {' '}
             </p>
             <div className="flex my-2 -mb-4 justify-center">
-            <Link to={linkUrl} className="font-medium text-purple-600 hover:text-purple-500">
+            <Link to={linkUrl} className="font-medium text-stone-600 hover:text-purple-500">
                 {linkName}
             </Link>
         </div>

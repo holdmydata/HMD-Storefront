@@ -66,7 +66,7 @@ const typeDefs = `#graphql
       rewardRedemption(phoneNumber: String!, rewardNumber: String!): RewardRedemption
     }`;
 
-const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "1234!"), {encrypted: 'ENCRYPTION_OFF'});
+const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "PasswordHere!"), {encrypted: 'ENCRYPTION_OFF'});
 
 console.log("Driver initialized:", !! driver);
 console.log(process.env.NEO4J_URI, process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
@@ -360,6 +360,10 @@ console.log("Is Driver defined? ", !! driver);
 
 const server = new ApolloServer({
     schema: await neoSchema.getSchema(),
+    cors: {
+        origin: '*',
+        credentials: true
+    },
     context: ({req}) => {
         return {req, driver};
     }
@@ -367,7 +371,8 @@ const server = new ApolloServer({
 
 const {url} = await startStandaloneServer(server, {
     listen: {
-        port: 5000
+        port: 5000,
+        host: '0.0.0.0',
     }
 });
 

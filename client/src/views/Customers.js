@@ -6,16 +6,17 @@ import CustomerSearch from "../components/CustomerSearch";
 function Customers(refetchTrigger) {
 
 
-    return (<div className="sm:items-stretch flex flex-row justify-center ">
-        <div className="font-gabarito reflex flex-row z-automx-auto  py-2 sm:px-4 lg:px-8lative rounded">
+    return (
+    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-md sm:items-stretch object-fill justify-center ">
+        <div className=" font-inter sm:mx-auto">
             {/* <div className="flex flex-row bg-neutral-50 shadow-neutral-600 rounded-xl ">
                 <div className=" border-2 rounded-xl bg-stone-900 "> */}
-                    <div className="text-2xl my-2 text-neutral-50 font-inter text-center">Create Customer</div>
-                    <div className="flex flex-row w-full p-2 xs:p-2">
+                    <div className="text-sm text-neutral-50 font-inter uppercase font-bold text-left">Create Customer</div>
+                    <div className="">
                     <CreateCustomerForm refetchTrigger={refetchTrigger}/>
                     </div>
                 <div className="flex flex-row bg-neutral-50 shadow-neutral-600 rounded-xl ">
-                <CustomerSearch />
+                {/* <CustomerSearch /> */}
                 </div>
 
                 {/* </div>

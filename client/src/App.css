@@ -5,7 +5,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 
-
 .App {
   text-align: center;
   
@@ -18,6 +17,8 @@
 
 .app-container {
   display: flex;
+  
+
 }
 .App-header {
   background-color: #282c34;
@@ -55,15 +56,18 @@ font-family: "Gabarito", sans-serif;
   transition: margin-left 0.3s ease-in-out;
   margin: 0 auto;
   padding: 0 20px;
+  overflow:hidden;
 }
 
 .main-content.open {
   margin-left: 250px;
+  max-height: 100vh;
+  overflow-y: hidden;
 }
 
 .background-image {
-  position: absolute;
-  background-size: cover;
+  position:fixed;
+  background-size:contain;
   top: 0;
   left: 0;
   width: 100%;
@@ -105,7 +109,8 @@ font-family: "Gabarito", sans-serif;
   }
 
   .main-content {
-      margin-left: 0; /* No sidebar to the left, so no margin needed */
+      margin-left: 0;
+      overflow: hidden;
   }
 
   .main-content.open {

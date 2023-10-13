@@ -4,7 +4,7 @@ import {createRoot} from 'react-dom/client';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const client = new ApolloClient({
-  uri: 'http://localhost:5000',  // Adjust this to your GraphQL server's URL
+  uri: 'http://192.168.1.234:5000/graphql', 
   cache: new InMemoryCache()
 });
 

@@ -19,7 +19,7 @@ function CreateCustomerForm({onSuccess, onError, onRefetch}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
+    const [isFocused, setIsFocused] = useState(false);
           
     const handleSubmit = async (e) => {
         console.log('Form data:', formData)
@@ -74,7 +74,7 @@ function CreateCustomerForm({onSuccess, onError, onRefetch}) {
 
     return (
         <>
-            <div className='p-2 m-2 lg:columns-2 sm:flex-auto md:flex-shrink sm:flex-shrink items-center sm:columns-1'>
+            <div className='m-2 lg:columns-2 sm:flex-auto md:flex-shrink items-center sm:columns-1'>
                 <form onSubmit={handleSubmit} className='w-full max-w-lg'>
                 <input type="text" name="firstName" id="firstName"
                     value={formData.firstName}
@@ -96,7 +96,10 @@ function CreateCustomerForm({onSuccess, onError, onRefetch}) {
                     onChange={handleChange}
                     placeholder="Email"
                     className = {inputClassName} />
-                <input type="date" name="birthday" id="birthday"   
+                <input type={isFocused ? "date":"date"} 
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    name="birthday" id="birthday"   
                     value={formData.birthday}
                     onChange={handleChange}
                     placeholder="Birthday"
