@@ -6,6 +6,8 @@ import neo4j from "neo4j-driver";
 import {format} from 'date-fns-tz';
 
 
+
+
 const typeDefs = `#graphql
 
     type Customer {
@@ -36,9 +38,16 @@ const typeDefs = `#graphql
     }
   
   type Query {
-      customersCheckedInToday(startOfDay: DateTime!, endOfDay: DateTime!): [Customer]
-      searchCustomer(phoneNumber: String!): [Customer]
+    customersCheckedInToday(startOfDay: DateTime!, endOfDay: DateTime!): [Customer]
+    searchCustomer(phoneNumber: String!): [Customer]
+    dashboardCounts: [DashboardCounts]
     }
+
+    type DashboardCounts {
+        customerCount: Int!
+        rewardCount: Int!
+    }
+
   
   type Reward {
       rewardID: ID
@@ -52,6 +61,7 @@ const typeDefs = `#graphql
       instructions: String
       createDate: DateTime
     }
+
 
   type RewardRedemption {
     id: ID!
@@ -240,18 +250,30 @@ const customResolvers = {
         },
 
 
-        createCustomer: async (_, { phoneNumber, firstName, lastName, email, birthday }, context) => {
-            const { executionContext } = context;
+        createCustomer: async (_, {
+            phoneNumber,
+            firstName,
+            lastName,
+            email,
+            birthday
+        }, context) => {
+            const {executionContext} = context;
             const session = executionContext.session();
             try {
                 console.log("Create Customer phoneNumber:", phoneNumber, "firstName:", firstName, "lastName:", lastName, "email:", email, "birthday:", birthday);
                 const result = await session.run(`
                     CREATE (c:Customer {id: apoc.create.uuid(), firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, email: $email, birthday: datetime($birthday), loyaltyCoins: 10, checkInDate: datetime()})
                     RETURN c
-                `, { phoneNumber, firstName, lastName, email, birthday });
-        
+                `, {
+                    phoneNumber,
+                    firstName,
+                    lastName,
+                    email,
+                    birthday
+                });
+
                 const customer = result.records[0].get('c').properties;
-        
+
                 return {
                     customer: {
                         id: customer.id,
@@ -270,10 +292,60 @@ const customResolvers = {
             } finally {
                 session.close();
             }
-        },
+        }
     },
 
     Query: {
+       
+        dashboardCounts: async (_, {}, context) => {
+            
+            const date = new Date();
+            const timeZone = 'America/Chicago'; // Replace with the desired time zone
+            const startDate = format(date, "yyyy-MM-dd'T'HH:mm:ss", {timeZone});
+            const TODAY_END = new Date();
+            TODAY_END.setHours(23, 59, 59, 999);
+            const endDate = format(TODAY_END, "yyyy-MM-dd'T'HH:mm:ss", {timeZone});
+
+            const executionContext = context.executionContext;
+            const session = executionContext.session();
+
+            console.log("Start Date:", startDate, "End Date:", endDate);
+    
+            try {
+                const customerResult = await session.run(`
+                MATCH (c:Customer)-[:VISITED]->(v:Visit)
+                WHERE v.date >= datetime($startDate) AND v.date <= datetime($endDate)
+                RETURN count(c) as count`, 
+            { startDate, endDate });
+            
+            const rewardResult = await session.run(`
+                MATCH (rr:RewardRedemption)
+                WHERE rr.date >= datetime($startDate) AND rr.date <= datetime($endDate)
+                RETURN count(rr) as count`, 
+            { startDate, endDate });
+                // console.log("Customer Result:", customerResult, "Reward Result:", rewardResult)
+                const customerProcessedResult = customerResult.records.map(record => {
+                    const customerCount = record.get('count');
+                    return customerCount;});
+                const rewardProcessedResult = rewardResult.records.map(record => {
+                    const rewardCount = record.get('count');
+                    return  rewardCount ;});
+                
+                const customerCount = customerProcessedResult[0].low;
+                const rewardCount = rewardProcessedResult[0].low;
+                console.log("Customer Count:", customerCount, "Reward Count:", rewardCount)
+                
+                return [{
+                    customerCount: customerCount,
+                    rewardCount: rewardCount
+                }];
+            }
+             finally {
+                session.close();
+            }
+        },
+    
+
         customersCheckedInToday: async (_, {
             startOfDay,
             endOfDay
@@ -282,34 +354,28 @@ const customResolvers = {
             // console.log("Start of day:", startOfDay, "End of day:", endOfDay, "Start Mute Type:", typeof startOfDay, "End Mute Type:", typeof endOfDay);
             try {
                 const result = await session.run(`
-            MATCH (c:Customer)-[:VISITED]->(v:Visit)
-            WHERE v.date >= datetime($startOfDay) AND v.date <= datetime($endOfDay)
-            RETURN c, v
-        `, {startOfDay, endOfDay});
+                    MATCH (c:Customer)-[:VISITED]->(v:Visit)
+                    WHERE v.date >= datetime($startOfDay) AND v.date <= datetime($endOfDay)
+                    RETURN c, v
+                `, {startOfDay, endOfDay});
 
-                // Process the result
                 const processedResult = result.records.map(record => {
-                    const customer = record.get('c').properties;
-                    const visits = record.get('visits').map(visit => visit.properties);
-
-
-                    // console.log("Customer ID:", customer.id);
-                    // console.log("Visit IDs:", visits.map(visit => visit.id));
-                    return {
-                        id: customer.id,
-                        firstName: customer.firstName,
-                        lastName: customer.lastName,
-                        phoneNumber: customer.phoneNumber,
-                        checkInDate: customer.checkInDate, // Convert to string?
-                        loyaltyCoins: customer.loyaltyCoins,
-                        visits: visits.map(visit => ({
-                            id: visit.id, date: visit.date,
-                            // Add any other visit fields you want here
-                        }))
-                        // Add any other customer fields you want here
-                    };
-                });
-
+                const customer = record.get('c').properties;
+                const visits = record.get('visits').map(visit => visit.properties);
+                return {
+                    id: customer.id,
+                    firstName: customer.firstName,
+                    lastName: customer.lastName,
+                    phoneNumber: customer.phoneNumber,
+                    checkInDate: customer.checkInDate, // Convert to string?
+                    loyaltyCoins: customer.loyaltyCoins,
+                    visits: visits.map(visit => ({
+                        id: visit.id, date: visit.date,
+                        // Add any other visit fields you want here
+                    }))
+                    // Add any other customer fields you want here
+                };
+            });
                 return processedResult;
             } finally {
                 session.close();
@@ -318,7 +384,7 @@ const customResolvers = {
 
         searchCustomer: async (_, {
             phoneNumber
-    }, context) => {
+        }, context) => {
             const session = context.driver.session();
             console.log("Search Customer phoneNumber:", phoneNumber);
             try {
@@ -346,8 +412,7 @@ const customResolvers = {
             } catch (error) {
                 console.error("Error in searchCustomer:", error);
                 throw error;
-            }
-            finally {
+            } finally {
                 session.close();
             }
         }
@@ -372,7 +437,7 @@ const server = new ApolloServer({
 const {url} = await startStandaloneServer(server, {
     listen: {
         port: 5000,
-        host: '0.0.0.0',
+        host: '0.0.0.0'
     }
 });
 

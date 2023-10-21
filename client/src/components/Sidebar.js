@@ -31,7 +31,7 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                     isCollapsed ? 'collapse' : ''
                 }`
             }>
-                <nav className="fixed bottom-0 left-0 md:left-0 md:top-0 md:bottom-auto overflow-y-auto flex-row  overflow-hidden shadow-xl bg-white flex flex-wrap items-center justify-between w-full md:w-64 z-10 py-4 px-6 md:block">
+                <nav className="fixed bottom-0 left-0 md:left-0 md:top-0 md:bottom-auto overflow-y-auto flex-row pt-2 shadow-xl bg-white flex flex-wrap items-center justify-between w-full md:w-64 z-10 py-4 px-6 md:block rounded-r-lg">
                     <button className={`absolute top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent rounded ${isCollapsed ? 'text-stone-900' : 'text-stone-600'} `}
                         type="button"
                         onClick={toggleSidebar}>
@@ -60,20 +60,16 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                             </div>
                             {/* Form */}
                             <form className="mt-6 mb-4 md:hidden">
-                                <div className="mb-3 pt-0">
+                                <div className="pt-0">
                                     <input type="tel" placeholder="Search" className="px-3 py-2 h-12 border border-solid  border-blueGray-500 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-base leading-snug shadow-none outline-none focus:outline-none w-full font-normal"/>
                                 </div>
                             </form>
                             {/* Navigation */}
                             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
-                                <li className="items-center">
-                                    <Link className={
-                                            `text-md font-inter py-3 block ${
-                                                currentPage === '/dashboard' || currentPage === '/' ? 'text-pink-500 hover:text-pink-600 font-bold' : 'text-blueGray-700 hover:text-blueGray-500 font-thin'
-                                            }`
-                                        }
+                                <li className="items-center text-lg font-inter pb-4 block">
+                                    <Link className={`${currentPage === '/dashboard' || currentPage === '/' ? 'text-pink-500 hover:text-pink-600 font-bold' : 'text-blueGray-700 hover:text-blueGray-500 font-thin'}`}
                                         to="/dashboard">
-                                        <i className="fas fa-tv opacity-75 mr-2 text-sm"></i>
+                                        <i className="fas fa-tv opacity-75 mr-2 text-lg"></i>
                                         <span className={
                                             `md:inline-block ${
                                                 isCollapsed ? 'hidden' : 'inline-block'
@@ -81,45 +77,26 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                                         }>Dashboard</span>
                                     </Link>
                                 </li>
-
-                                <li className="items-center">
-                                    <Link className={
-                                            `text-md font-inter py-3 block ${
-                                                currentPage === '/customers' ? 'text-pink-500 hover:text-pink-600 font-bold' : 'text-blueGray-700 hover:text-blueGray-500 font-thin'
-                                            }`
-                                        }
+                                <li className="items-center text-lg font-inter pb-4 block">
+                                    <Link className={`${currentPage === '/customers' ? 'text-pink-500 hover:text-pink-600 font-bold' : 'text-blueGray-700 hover:text-blueGray-500 font-thin'}`}
                                         to="/customers">
-                                        <i className="fas fa-newspaper text-blueGray-400 mr-2 text-sm"></i>
-                                        <span className={
-                                            `md:inline-block ${
-                                                isCollapsed ? 'hidden' : 'inline-block'
-                                            }`
-                                        }>Customers</span>
+                                        <i className="fas fa-newspaper text-blueGray-400 mr-2 text-lg"></i>
+                                        <span className={`md:inline-block ${isCollapsed ? 'hidden' : 'inline-block'}`}>Customers</span>
                                     </Link>
                                 </li>
-
-                                <li className="items-center">
-                                    <Link className={
-                                            `text-md font-inter py-3 block ${
-                                                currentPage === '/rewards' ? 'text-pink-500 hover:text-pink-600 font-bold' : 'text-blueGray-700 hover:text-blueGray-500 font-thin'
-                                            }`
-                                        }
+                                <li className="items-center text-lg font-inter pb-4 block">
+                                    <Link className={`${currentPage === '/rewards' ? 'text-pink-500 hover:text-pink-600 font-bold' : 'text-blueGray-700 hover:text-blueGray-500 font-thin'}`}
                                         to="/rewards">
-                                        <i className="fas fa-coins text-blueGray-400 mr-2 text-sm"></i>
-                                        <span className={
-                                            `md:inline-block ${
-                                                isCollapsed ? 'hidden' : 'inline-block'
-                                            }`
-                                        }>Rewards</span>
+                                        <i className="fas fa-coins text-blueGray-400 mr-2 text-lg"></i>
+                                        <span className={`md:inline-block ${isCollapsed ? 'hidden' : 'inline-block'}`}>Rewards</span>
                                     </Link>
                                 </li>
-
-                                <li className="items-center font-thin">
-                                    <a className="text-blueGray-300 font-inter text-md py-3 block" href="#pablo"
+                                <li className="items-center text-lg font-inter block">
+                                    <a className="text-blueGray-300 font-inter py-1 block" href="#pablo"
                                         onClick={
                                             e => e.preventDefault()
                                     }>
-                                        <i className="fas fa-tools text-blueGray-300 mr-2 text-sm"></i>
+                                        <i className="fas fa-tools text-blueGray-300 mr-2 text-lg"></i>
                                         <span className={
                                             `md:inline-block ${
                                                 isCollapsed ? 'hidden' : 'inline-block'
