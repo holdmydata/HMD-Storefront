@@ -79,6 +79,7 @@ font-family: "Gabarito", sans-serif;
 .sidebar {
   width: 20px;
   float: left;
+  opacity: 0.9;
 }
 
 .main-content {

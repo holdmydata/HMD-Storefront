@@ -4,11 +4,37 @@ import {Neo4jGraphQL} from "@neo4j/graphql";
 import neo4j from "neo4j-driver";
 // import { DateTimeResolver, DateTimeTypeDefinition } from 'graphql-scalars';
 import {format} from 'date-fns-tz';
-
-
-
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const typeDefs = `#graphql
+
+    type Query {
+        customersCheckedInToday(startOfDay: DateTime!, endOfDay: DateTime!): [Customer]
+        searchCustomer(phoneNumber: String!): [Customer]
+        dashboardCounts: [DashboardCounts]
+        frontpageChartData: [FrontpageChartData]
+        user: User
+    }
+
+    type Mutation {
+        checkInCustomer(phoneNumber: String!): Visit
+        createCustomer(phoneNumber: String!, firstName: String!, lastName: String!, email: String, birthday: DateTime!): Customer
+        rewardRedemption(phoneNumber: String!, rewardNumber: String!): RewardRedemption
+        login(username: String!, password: String!): AuthPayload!
+        signup(username: String!, password: String!): AuthPayload!
+      }
+
+    type User {
+        id: ID!
+        username: String!
+        password: String!
+    }
+
+    type AuthPayload {
+        token: String!
+        user: User!
+    }
 
     type Customer {
         id: ID
@@ -37,15 +63,18 @@ const typeDefs = `#graphql
       customer: Customer @relationship(type: "VISITED", direction: IN)
     }
   
-  type Query {
-    customersCheckedInToday(startOfDay: DateTime!, endOfDay: DateTime!): [Customer]
-    searchCustomer(phoneNumber: String!): [Customer]
-    dashboardCounts: [DashboardCounts]
-    }
+
 
     type DashboardCounts {
         customerCount: Int!
         rewardCount: Int!
+    }
+
+    type FrontpageChartData {
+        visitDate: Date!
+        customerCount: Int!
+        rewardCount: Int!
+        visitCount: Int!
     }
 
   
@@ -68,21 +97,78 @@ const typeDefs = `#graphql
     date: DateTime!
     customer: Customer @relationship(type: "REDEEMED", direction: IN)
     reward: Reward @relationship(type: "REDEEMED", direction: OUT)
-  }
+  }`;
 
-  type Mutation {
-      checkInCustomer(phoneNumber: String!): Visit
-      createCustomer(phoneNumber: String!, firstName: String!, lastName: String!, email: String, birthday: DateTime!): Customer
-      rewardRedemption(phoneNumber: String!, rewardNumber: String!): RewardRedemption
-    }`;
-
-const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "PasswordHere!"), {encrypted: 'ENCRYPTION_OFF'});
+const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "YourPasswordHere!"), {encrypted: 'ENCRYPTION_OFF'});
 
 console.log("Driver initialized:", !! driver);
 console.log(process.env.NEO4J_URI, process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 
 const customResolvers = {
     Mutation: {
+        login: async (_, { username, password }, context) => {
+            const { executionContext } = context;
+            const session = executionContext.session();
+            const APP_SECRET = process.env.APP_SECRET || 'appsecret321';
+        
+            try {
+                // Find the user by username only
+                const result = await session.run(`
+                    MATCH (u:User {username: $username})
+                    RETURN u
+                `, { username });
+        
+                if (result.records.length === 0) {
+                    throw new Error('No such user found');
+                }
+        
+                const user = result.records[0].get('u').properties;
+        
+                // Compare the provided password with the stored hashed password
+                const valid = await bcrypt.compare(password, user.password);
+                if (!valid) {
+                    throw new Error('Invalid password');
+                }
+        
+                const token = jwt.sign({ userId: user.id }, APP_SECRET);
+                return { token, user };
+            } catch (error) {
+                console.error("Error in login:", error);
+                throw error;
+            } finally {
+                session.close();
+            }
+        },
+        signup: async (_, {
+            username,
+            password
+        }, context) => {
+            const {executionContext} = context;
+            const session = executionContext.session();
+            const APP_SECRET = process.env.APP_SECRET || 'appsecret321';
+            console.log("Signup username:", username, "password:", password, "APP_SECRET:", APP_SECRET);
+            const hashedPassword = await bcrypt.hash(password, 10);
+            try {
+                const result = await session.run(`
+                    CREATE (u:User {id: apoc.create.uuid(), username: $username, password: $password})
+                    RETURN u
+                `, {username, password: hashedPassword});
+
+                const user = result.records[0].get('u').properties;
+
+                const token = jwt.sign({
+                    userId: user.id
+                }, APP_SECRET);
+                return {token, user};
+            } catch (error) {
+                console.error("Error in signup:", error);
+                throw error;
+            } finally {
+                session.close();
+            }
+        },
+
+
         checkInCustomer: async (_, {
             phoneNumber
         }, context) => {
@@ -296,9 +382,9 @@ const customResolvers = {
     },
 
     Query: {
-       
+
         dashboardCounts: async (_, {}, context) => {
-            
+
             const date = new Date();
             const timeZone = 'America/Chicago'; // Replace with the desired time zone
             const startDate = format(date, "yyyy-MM-dd'T'HH:mm:ss", {timeZone});
@@ -310,41 +396,40 @@ const customResolvers = {
             const session = executionContext.session();
 
             console.log("Start Date:", startDate, "End Date:", endDate);
-    
+
             try {
                 const customerResult = await session.run(`
                 MATCH (c:Customer)-[:VISITED]->(v:Visit)
                 WHERE v.date >= datetime($startDate) AND v.date <= datetime($endDate)
-                RETURN count(c) as count`, 
-            { startDate, endDate });
-            
-            const rewardResult = await session.run(`
+                RETURN count(c) as count`, {startDate, endDate});
+
+                const rewardResult = await session.run(`
                 MATCH (rr:RewardRedemption)
                 WHERE rr.date >= datetime($startDate) AND rr.date <= datetime($endDate)
-                RETURN count(rr) as count`, 
-            { startDate, endDate });
+                RETURN count(rr) as count`, {startDate, endDate});
                 // console.log("Customer Result:", customerResult, "Reward Result:", rewardResult)
                 const customerProcessedResult = customerResult.records.map(record => {
                     const customerCount = record.get('count');
-                    return customerCount;});
+                    return customerCount;
+                });
                 const rewardProcessedResult = rewardResult.records.map(record => {
                     const rewardCount = record.get('count');
-                    return  rewardCount ;});
-                
+                    return rewardCount;
+                });
+
                 const customerCount = customerProcessedResult[0].low;
                 const rewardCount = rewardProcessedResult[0].low;
                 console.log("Customer Count:", customerCount, "Reward Count:", rewardCount)
-                
+
                 return [{
-                    customerCount: customerCount,
-                    rewardCount: rewardCount
-                }];
-            }
-             finally {
+                        customerCount: customerCount,
+                        rewardCount: rewardCount
+                    }];
+            } finally {
                 session.close();
             }
         },
-    
+
 
         customersCheckedInToday: async (_, {
             startOfDay,
@@ -360,22 +445,52 @@ const customResolvers = {
                 `, {startOfDay, endOfDay});
 
                 const processedResult = result.records.map(record => {
-                const customer = record.get('c').properties;
-                const visits = record.get('visits').map(visit => visit.properties);
-                return {
-                    id: customer.id,
-                    firstName: customer.firstName,
-                    lastName: customer.lastName,
-                    phoneNumber: customer.phoneNumber,
-                    checkInDate: customer.checkInDate, // Convert to string?
-                    loyaltyCoins: customer.loyaltyCoins,
-                    visits: visits.map(visit => ({
-                        id: visit.id, date: visit.date,
-                        // Add any other visit fields you want here
-                    }))
-                    // Add any other customer fields you want here
-                };
-            });
+                    const customer = record.get('c').properties;
+                    const visits = record.get('visits').map(visit => visit.properties);
+                    return {
+                        id: customer.id,
+                        firstName: customer.firstName,
+                        lastName: customer.lastName,
+                        phoneNumber: customer.phoneNumber,
+                        checkInDate: customer.checkInDate, // Convert to string?
+                        loyaltyCoins: customer.loyaltyCoins,
+                        visits: visits.map(visit => ({
+                            id: visit.id, date: visit.date,
+                            // Add any other visit fields you want here
+                        }))
+                        // Add any other customer fields you want here
+                    };
+                });
+                return processedResult;
+            } finally {
+                session.close();
+            }
+        },
+
+        frontpageChartData: async (_, {}, context) => {
+            const executionContext = context.executionContext;
+            const session = executionContext.session();
+            try {
+                const result = await session.run(`
+
+                MATCH (c:Customer)-[:VISITED]->(v:Visit)
+                WHERE v.date >= datetime("2023-10-19T00:00:00")
+                WITH date(v.date) AS visitDate, count(c) AS customerCount, count(v) AS visitCount
+                OPTIONAL MATCH (c:Customer)-[:REDEEMED]->(rr:RewardRedemption)
+                WHERE rr.date >= datetime("2023-10-19T00:00:00") AND date(rr.date) = visitDate
+                WITH visitDate, customerCount, visitCount, count(rr) AS rewardCount
+                RETURN visitDate, customerCount, visitCount, rewardCount
+                ORDER BY visitDate
+                `);
+
+                const processedResult = result.records.map(record => {
+                    const visitDate = record.get('visitDate');
+                    const customerCount = record.get('customerCount');
+                    const rewardCount = record.get('rewardCount');
+                    const visitCount = record.get('visitCount');
+                    return {visitDate: visitDate, customerCount: customerCount, rewardCount: rewardCount, visitCount: visitCount};
+                });
+
                 return processedResult;
             } finally {
                 session.close();

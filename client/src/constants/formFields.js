@@ -4,7 +4,7 @@ const loginFields=[
         labelFor:"username",
         id:"username",
         name:"username",
-        type:"username",
+        type:"text",
         autoComplete:"username",
         isRequired:true,
         placeholder:"Username"   

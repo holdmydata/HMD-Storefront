@@ -1,51 +1,29 @@
 import { useState } from 'react';
-import  loginFields  from '../constants/formFields';
+import loginFields from '../constants/formFields';
 import ModalInput from "./ModalInput";
-import { gql } from '@apollo/client';
 
-const fields=loginFields;
+const fields = loginFields;
 let fieldsState = {};
-fields.forEach(field=>fieldsState[field.id]='');
+fields.forEach(field => fieldsState[field.id] = '');
 
-const SIGNUP_MUTATION = gql`
-  mutation SignupMutation(
-    $email: String!
-    $password: String!
-    $name: String!
-  ) {
-    signup(
-      password: $password
-      name: $name
-    ) {
-      token
-    }
-  }
-`;
+export default function LoginForm({ onLogin, onSignupClick }) {
+    const [loginState, setLoginState] = useState(fieldsState);
 
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation(
-    $email: String!
-    $password: String!
-  ) {
-    login(email: $email, password: $password) {
-      token
-    }
-  }
-`;
-
-export default function LoginForm(){
-    const [loginState,setLoginState]=useState(fieldsState);
-
-    const handleChange=(e)=>{
-        setLoginState({...loginState,[e.target.id]:e.target.value})
+    const handleChange = (e) => {
+      setLoginState({ ...loginState, [e.target.id]: e.target.value });
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(loginState.username, loginState.password)
+        onLogin(loginState.username, loginState.password);
+    }
 
-    return(
-        <form className="mt-8 space-y-6">
-        <div className="-space-y-px">
-            {
-                fields.map(field=>
+    return (
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            <div className="-space-y-px">
+                {
+                    fields.map(field =>
                         <ModalInput
                             key={field.id}
                             handleChange={handleChange}
@@ -57,14 +35,12 @@ export default function LoginForm(){
                             type={field.type}
                             isRequired={field.isRequired}
                             placeholder={field.placeholder}
-                    />
-                
-                )
-            }
-        </div>
-
-       
-
-      </form>
+                        />
+                    )
+                }
+            </div>
+            <button type="submit" className="bg-black hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2">Login</button>
+            <button onClick={onSignupClick} className="bg-black hover:bg-blue-600 text-white py-2 px-4 rounded w-full mt-2">Sign Up</button>
+        </form>
     )
 }

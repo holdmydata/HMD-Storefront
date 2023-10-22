@@ -22,7 +22,7 @@ function Dashboard({onRefetch}) {
                             <FrontpageChart/>
                         </div>
                         <h2 className="text-md text-left flex flex-auto text-stone-100  font-stock uppercase font-extrabold sm:text-md pb-2">Check In Customer</h2>
-                        <CheckInForm onRefetch={onRefetch}/>
+                        <CheckInForm refetchTrigger={onRefetch}/>
                     </div>
                 {/* <CustomerResults onRefetch={onRefetch}/> */}
                 </div>

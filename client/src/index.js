@@ -2,6 +2,10 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import App from './App';
 import {createRoot} from 'react-dom/client';
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { StrictMode } from 'react';
+import { AuthProvider } from './components/Auth';
+
+
 
 const client = new ApolloClient({
   uri: 'http://192.168.1.234:5000/graphql', 
@@ -12,7 +16,11 @@ const root = createRoot(document.getElementById('root'));
 
 root.render(
   <ApolloProvider client={client}>
+    <StrictMode>
+      <AuthProvider>
     <App />
+    </AuthProvider>
+    </StrictMode>
   </ApolloProvider>
 );
 

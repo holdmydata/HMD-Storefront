@@ -1,10 +1,45 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import BarChart from './BarChart';
+import { gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
-function FrontpageChart() {
-    // Fetch and format your data here
-    const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const data = [12, 19, 3, 5, 2, 3, 7]; 
+function FrontpageChart(refetchTrigger) {
+    
+    const GET_FRONTPAGE_CHART_DATA = gql`
+    query GetFrontpageChartData {
+        frontpageChartData {
+            visitDate
+            customerCount
+            rewardCount
+            visitCount
+        }
+      }
+    `;
+    
+    const { loading, error, data, refetch } = useQuery(GET_FRONTPAGE_CHART_DATA);
+
+    useEffect(() => {
+        refetch();
+      }, [refetchTrigger, refetch]);
+    
+      if (loading) 
+          return <p>Loading...</p>;
+      if (error) 
+          return <p>Error: {
+              error.message
+          }</p>;
+
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error.message}</p>;
+
+
+
+    console.log("Frontpage chart data:", data);
+
+    const labels = data && data.frontpageChartData ? data.frontpageChartData.map(item => item.visitDate) : [];
+    const chartData = data && data.frontpageChartData ? data.frontpageChartData.map(item => item.visitCount) : [];
+
     const backgroundColor = 'transparent';
     const borderColor = 'rgba(75, 192, 192, 1)';
     const label = 'Check-ins Last 7 Days';
@@ -13,7 +48,7 @@ function FrontpageChart() {
         <div>
             <BarChart
                 labels={labels} 
-                data={data} 
+                data={chartData} 
                 backgroundColor={backgroundColor} 
                 borderColor={borderColor} 
                 label={label} 

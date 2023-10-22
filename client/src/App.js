@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
+import React, {useState, useEffect, useContext} from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Customers from './views/Customers';
 import Dashboard from './views/Dashboard';
 import Rewards from './views/Rewards';
@@ -9,10 +9,19 @@ import backgroundImage from "./assets/img/app-bg-dark.png";
 import Login from "./views/Login";
 import BottomBar from "./components/BottomBar";
 import AppHeader from "./components/AppHeader";
-// import Tabs from "./components/Tabs";
+import { AuthContext } from "./components/Auth";
 
+// import Tabs from "./components/Tabs";
+const ProtectedRoute = ({ element, ...rest }) => {
+  const { authState } = useContext(AuthContext);
+
+  return authState ? element : <Navigate to="/login" replace />;
+};
 
 function App() {
+
+  
+
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 600);
@@ -20,7 +29,7 @@ function App() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleSidebar = () => {
     const newIsCollapsed = !isCollapsed;
@@ -59,18 +68,16 @@ function App() {
     </button>
     <div className={`main-content ${isCollapsed ? '' : 'open'}`}>
         <Routes>
-          <Route path="/" element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} />
-          <Route path="/dashboard" element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} />
-          <Route path="/customers" element={<Customers refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} />
-          <Route path="/rewards" element={<Rewards refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} />
-          <Route path="/login" element={<Login isModalOpen={isModalOpen} openModal={openModal} closeModal={closeModal}/>} />
+          <Route path="/" element={<ProtectedRoute element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
+          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
+          <Route path="/customers" element={<ProtectedRoute element={<Customers refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
+          <Route path="/rewards" element={<ProtectedRoute element={<Rewards refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
+          <Route path="/login" element={<Login isModalOpen={isModalOpen} openModal={openModal} closeModal={closeModal} />} />
         </Routes>
-
+      </div>
     </div>
-  </div>
 </Router>
   );
-};
-
+}
 
 export default App;
