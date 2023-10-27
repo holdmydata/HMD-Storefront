@@ -19,11 +19,11 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                     !isCollapsed
                 }
                 enter="transition ease-in-out duration-300 transform"
-                enterFrom="-translate-x-full"
-                enterTo="translate-x-0"
+                enterFrom="-translate-y-full"
+                enterTo="translate-y-0"
                 leave="transition ease-in-out duration-300 transform"
-                leaveFrom="translate-x-0"
-                leaveTo="-translate-x-full">
+                leaveFrom="translate-y-0"
+                leaveTo="-translate-y-full">
                 <div className={
                     `sidebar ${
                         isModalOpen ? 'hidden' : ''
@@ -31,7 +31,7 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                         isCollapsed ? 'collapse' : ''
                     }`
                 }>
-                    <nav className="fixed bottom-0 left-0 md:left-0 md:top-0 md:bottom-auto overflow-y-auto flex-row pt-2 shadow-xl dark:bg-stone-800 dark:bg-opacity-5 dark:border dark:border-stone-900 dark:text-white dark:shadow-sm dark:shadow-stone-900 flex flex-wrap items-center justify-between w-full md:w-64 z-10 py-4 px-6 md:block rounded-r-lg">
+                    <nav className="fixed top-0 right-0 md:left-0 md:top-0 md:bottom-auto overflow-y-auto flex-row pt-2 shadow-xl dark:bg-stone-900 dark:bg-opacity-5 dark:border dark:border-stone-900 dark:text-white dark:shadow-sm dark:shadow-stone-900 flex flex-wrap items-center justify-between w-full md:w-64 z-10 py-4 px-6 md:block rounded-r-lg">
                         <button className={
                                 `absolute top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent rounded ${
                                     isCollapsed ? 'text-stone-900' : 'text-stone-600'
@@ -149,12 +149,12 @@ export default function Sidebar({onRefetch, isModalOpen, isCollapsed, toggleSide
                                 </div>
                             </div>
                             <div className="sidebar pb-4 bottom-0 w-full"></div>
-                            <div className="sidebar-footer p-4 shadow-lg border rounded bg-stone-900 text-white">
+                            <div className="sidebar-footer p-4 shadow-lg border rounded bg-stone-900 text-stone-900">
                                 <div className="flex items-center">
                                     <img src={userImage}
                                         alt="User Avatar"
                                         className="h-10 w-10 rounded-full mr-4"/>
-                                    <div className="text-gray-500 text-justify flex-grow">Rhonda</div>
+                                    <div className="text-stone-100 text-justify flex-grow">Rhonda</div>
                                 </div>
                                 <div className="mt-4">
                                     <Link to="/login">

@@ -4,6 +4,13 @@
 @import url("//fonts.googleapis.com/css?family=Inter+Tight" );
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 .App {
   text-align: center;
@@ -36,11 +43,34 @@
   color: #61dafb;
 }
 
-.sidebar {
+/* .sidebar {
 display: flex;
 flex-direction: column;
 font-weight: normal;
 font-family: "Gabarito", sans-serif;
+} */
+
+.sidebar-icon {
+  @apply relative flex items-center justify-center 
+  h-12 w-12 mt-2 mb-2 mx-auto  
+bg-gray-400 hover:bg-stone-400 dark:bg-stone-800 bg-opacity-20 
+text-stone-200 hover:text-white
+  hover:rounded-xl rounded-3xl
+  transition-all duration-300 ease-linear
+  cursor-pointer;
+}
+
+.sidebar-tooltip {
+  @apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md
+  text-stone-50 bg-stone-700 
+  text-xs font-bold 
+  transition-all duration-100 scale-0 origin-left;
+}
+
+.sidebar-hr {
+  @apply bg-gray-200 dark:bg-gray-800 
+  border border-gray-200 dark:border-gray-800 rounded-full
+  mx-2;
 }
 
 .sidebar-footer {
@@ -75,11 +105,43 @@ font-family: "Gabarito", sans-serif;
   z-index: -1;
 }
 
-/* Default styles for large screens */
 .sidebar {
-  width: 20px;
-  float: left;
-  opacity: 0.9;
+  position: fixed;
+  transition: 0.3s;
+  z-index: 10;
+  padding-left: 10px;
+}
+
+@media only screen and (min-width: 763px) {
+  .sidebar {
+    left: 0;
+    top: 0;
+    bottom: auto;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 762px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    bottom: 0;
+    left: 0;
+    top: auto;
+  }
+  .sidebar-icon {
+    margin: 0 auto;
+  }
+  
+  .sidebar-tooltip {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 0%;
+    top: -50px;
+    bottom: auto;
+    margin-left: 0;
+    transition: all 0.1s ease-in-out;
+  }
 }
 
 .main-content {
@@ -104,9 +166,9 @@ font-family: "Gabarito", sans-serif;
 }
 
 /* Adjust styles for small screens */
-@media (max-width: 600px) {
+@media (max-width: 762px) {
   .sidebar {
-      display: none;
+      width:auto
   }
 
   .main-content {

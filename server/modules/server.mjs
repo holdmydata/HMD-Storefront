@@ -109,7 +109,7 @@ const customResolvers = {
         login: async (_, { username, password }, context) => {
             const { executionContext } = context;
             const session = executionContext.session();
-            const APP_SECRET = process.env.APP_SECRET || 'appsecret321';
+            const APP_SECRET = process.env.APP_SECRET || 'appsecret321'; // Just using this for testing
         
             try {
                 // Find the user by username only

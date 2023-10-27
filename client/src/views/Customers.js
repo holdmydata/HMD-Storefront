@@ -11,7 +11,7 @@ function Customers(refetchTrigger) {
         <div className=" font-inter sm:mx-auto">
             {/* <div className="flex flex-row bg-neutral-50 shadow-neutral-600 rounded-xl ">
                 <div className=" border-2 rounded-xl bg-stone-900 "> */}
-                    <div className="text-sm text-neutral-50 font-inter uppercase font-bold text-left">Create Customer</div>
+                <h2 className="text-md text-left flex flex-auto text-stone-100  font-stock uppercase font-extrabold sm:text-md ">Create Customer</h2>
                     <div className="">
                     <CreateCustomerForm refetchTrigger={refetchTrigger}/>
                     </div>

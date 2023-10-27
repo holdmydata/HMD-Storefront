@@ -35,7 +35,7 @@ function FrontpageChart(refetchTrigger) {
 
 
 
-    console.log("Frontpage chart data:", data);
+    // console.log("Frontpage chart data:", data);
 
     const labels = data && data.frontpageChartData ? data.frontpageChartData.map(item => item.visitDate) : [];
     const chartData = data && data.frontpageChartData ? data.frontpageChartData.map(item => item.visitCount) : [];

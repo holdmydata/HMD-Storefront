@@ -13,9 +13,6 @@ function DashboardCounts({refetchTrigger})  {
     const START_OF_DAY = formatISO(TODAY_START, { representation: 'date' }) + 'T00:00:00';
     const END_OF_DAY = formatISO(TODAY_END, { representation: 'date' }) + 'T23:59:59';
     
-    console.log("Start of Day:", START_OF_DAY);
-    console.log("End of Day:", END_OF_DAY);
-
     const { loading, error, data, refetch } = useQuery(GET_DASHBOARD_COUNTS_QUERY, {
         variables: {
             startOfDay: START_OF_DAY,
@@ -33,10 +30,8 @@ function DashboardCounts({refetchTrigger})  {
           return <p>Error: {
               error.message
           }</p>;
-
-    const finalCounts = data.dashboardCounts[0]
-    console.log("Final counts: " & finalCounts);
-
+        if (!data) return <p>Not found</p>;
+        
     return (
         <>
         <div className="container max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">

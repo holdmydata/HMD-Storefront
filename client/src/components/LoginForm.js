@@ -15,7 +15,7 @@ export default function LoginForm({ onLogin, onSignupClick }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(loginState.username, loginState.password)
+        // console.log(loginState.username, loginState.password)
         onLogin(loginState.username, loginState.password);
     }
 

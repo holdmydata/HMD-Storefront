@@ -51,9 +51,9 @@ function CustomerResults({refetchTrigger}) {
   
 
   return (
-    <div className="p-4 w-auto  shadow-lg border border-white rounded-md bg-stone-800">
-      <table className="table-fixed text-sm w-full border border-gray-300 divide-y divide-gray-300">
-        <thead>
+    <div className="p-4 w-auto">
+      <table className="table-fixed text-sm w-full  border-stone-600 divide-y divide-stone-300">
+        <thead className=' shadow-inner shadow-stone-300 rounded-t-md'>
           <tr>
             <th className="p-2 text-center text-neutral-200">Name</th>
             <th className="p-2 text-center  text-neutral-200 ">Phone</th>
@@ -63,7 +63,7 @@ function CustomerResults({refetchTrigger}) {
         </thead>
         <tbody>
           {customers.map((b, i) => (
-            <tr key={i} className={`${i % 2 === 0 ? 'bg-neutral-50 text-neutral-600' : 'bg-stone-700 text-neutral-50'} hover:bg-neutral-100 hover:text-stone-600`}>
+            <tr key={i} className={`${i % 2 === 0 ? 'bg-stone-50 text-stone-900 hover:bg-stone-800 hover:text-stone-50' : 'bg-stone-900 text-stone-50'} hover:bg-neutral-100 hover:text-stone-900`}>
               <td className="p-2 font-thin text-center">{b.firstName} {b.lastName}</td>
               <td className="p-2 font-thin text-center">{b.phoneNumber}</td>
               <td className="p-2 font-thin text-center">{b.visits.map((visit, j) => (

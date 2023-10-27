@@ -32,7 +32,7 @@ function Login({isModalOpen, openModal, closeModal}) {
 
     const handleLogin = async (username, password) => {
         try {
-            console.log(username, password); // Add this line to log the username and password
+            // console.log(username, password);
             const {data} = await loginMutation({
                 variables: {
                     username,

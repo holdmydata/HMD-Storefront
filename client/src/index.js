@@ -2,6 +2,8 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import App from './App';
 import {createRoot} from 'react-dom/client';
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "tailwindcss/tailwind.css";
+import "react-icons";
 import { StrictMode } from 'react';
 import { AuthProvider } from './components/Auth';
 

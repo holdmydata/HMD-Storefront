@@ -21,17 +21,17 @@ function CheckInForm({onRefetch}) {
     e.preventDefault();
     try {
       const response = await checkInCustomer({ variables: { phoneNumber: phoneNumber } });
-      console.log(response?.data);
+      // console.log(response?.data);
       if (response?.data?.checkInCustomer) {  
         const customer = response.data.checkInCustomer.customer;
-        console.log('Customer before:', customer);
+        // console.log('Customer before:', customer);
         setCustomerInfo(customer);
-        console.log('Customer after:', customerInfo);
+        // console.log('Customer after:', customerInfo);
         const customerLoyaltyCoins = customer.loyaltyCoins;
         const customerFirstName = customer.firstName;
 
         if (customerLoyaltyCoins >= 100) {
-          console.log('Customer has enough loyalty coins to redeem a reward!');
+          // console.log('Customer has enough loyalty coins to redeem a reward!');
           setModalContent(
             <div>
               <p>🥳{customer.firstName} has enough loyalty coins to redeem a reward!</p>
@@ -41,7 +41,7 @@ function CheckInForm({onRefetch}) {
           );
           openModal();
         } else {
-          console.log('Customer does not have enough loyalty coins to redeem a reward.');
+          // console.log('Customer does not have enough loyalty coins to redeem a reward.');
           setModalContent(
             <div>
               <p className='text-md font-medium'>🥳{customerFirstName} checked in!</p>
@@ -61,11 +61,11 @@ function CheckInForm({onRefetch}) {
 
   const handleRedeem = async (customer) => {
 
-    console.log('Redeeming reward for customer:', customer)
+    // console.log('Redeeming reward for customer:', customer)
     if (customer) {
       try {
         const redeemData = await redeem( customer.phoneNumber, "1" );
-        console.log('Redeem data before:', redeemData)
+        // console.log('Redeem data before:', redeemData)
 
         setModalContent(
         <div>

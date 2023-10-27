@@ -10,6 +10,7 @@ import Login from "./views/Login";
 import BottomBar from "./components/BottomBar";
 import AppHeader from "./components/AppHeader";
 import { AuthContext } from "./components/Auth";
+import Settings from "./views/Settings";
 
 // import Tabs from "./components/Tabs";
 const ProtectedRoute = ({ element, ...rest }) => {
@@ -24,7 +25,7 @@ function App() {
 
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 600);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 762);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -54,24 +55,25 @@ function App() {
   return (
     
     <Router>
-    <AppHeader />
+    <AppHeader isMobileView={isMobileView} isCollapsed={isCollapsed}/>
     
-  {!isModalOpen && !isMobileView && <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} refetchTrigger={refetchTrigger} onRefetch={handleRefetch} className="sidebar-footer"/>}
-  {isMobileView && <BottomBar />}
+  {/* {!isModalOpen && !isMobileView && <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} refetchTrigger={refetchTrigger} onRefetch={handleRefetch} className="sidebar-footer"/>} */}
+  {/* {isMobileView && <BottomBar />} */}
     {/* {!isModalOpen && isMobileView && <Tabs  refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} */}
     <div className="app-container"> 
     <img src= {backgroundImage}  alt="Background" className="background-image bg-grid-slate-900/[0.04]" />
-<button className={`fixed top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent  rounded ${isCollapsed ? 'text-stone-700' : 'text-stone-600'} z-0`} 
+{/* <button className={`fixed top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent  rounded ${isCollapsed ? 'text-stone-700' : 'text-stone-600'} z-0`} 
       type="button"
       onClick={toggleSidebar}>
       <i className={`fas ${isCollapsed ? 'fa-bars' : 'fa-times'}`}></i>
-    </button>
+    </button> */}
     <div className={`main-content ${isCollapsed ? '' : 'open'}`}>
         <Routes>
           <Route path="/" element={<ProtectedRoute element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
           <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
           <Route path="/customers" element={<ProtectedRoute element={<Customers refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
           <Route path="/rewards" element={<ProtectedRoute element={<Rewards refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
+          <Route path="/settings" element={<ProtectedRoute element={<Settings refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
           <Route path="/login" element={<Login isModalOpen={isModalOpen} openModal={openModal} closeModal={closeModal} />} />
         </Routes>
       </div>
