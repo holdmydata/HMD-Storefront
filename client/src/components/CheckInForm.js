@@ -82,18 +82,18 @@ function CheckInForm({onRefetch}) {
     }
   };
 
-  const handleClose = () => {
 
-    if ( onRefetch ) {
-      onRefetch();
-      setCustomerInfo(null);
-      closeModal();
-
-    } else {
-      setCustomerInfo(null);
-      closeModal();
-    }
-  };
+    const handleClose = () => {
+      if (onRefetch) {
+        onRefetch().then(() => {
+          setCustomerInfo(null);
+          closeModal();
+        });
+      } else {
+        setCustomerInfo(null);
+        closeModal();
+      }
+    };
 
   return (
     // <div className="p-4 py-6 shadow-lg border rounded-xl bg-white mx-auto max-w-7xl sm:px-6 lg:px-8">

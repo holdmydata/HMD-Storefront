@@ -6,6 +6,7 @@ import "tailwindcss/tailwind.css";
 import "react-icons";
 import { StrictMode } from 'react';
 import { AuthProvider } from './components/Auth';
+import { ThemeProvider } from './components/ThemeProvider';
 
 
 
@@ -20,7 +21,9 @@ root.render(
   <ApolloProvider client={client}>
     <StrictMode>
       <AuthProvider>
+      <ThemeProvider>
     <App />
+    </ThemeProvider>
     </AuthProvider>
     </StrictMode>
   </ApolloProvider>

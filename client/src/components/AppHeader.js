@@ -13,7 +13,7 @@ const AppHeader = ({isMobileView}) => {
     const SideBarIcon = ({ icon, text }) => (
         <div className="sidebar-icon group">
           {icon}
-          <span class="sidebar-tooltip group-hover:scale-100 scale-0">
+          <span className="sidebar-tooltip group-hover:scale-100 scale-0">
             {text}
           </span>
         </div>
@@ -26,22 +26,22 @@ const AppHeader = ({isMobileView}) => {
 
     return (
         <>
-        <div className={`sidebar ${isMobileView ? 'justify-evenly bottom-0 left-0 w-full bg-stone-900 shadow-stone-50 overflow-show' : 'flex-col top-0 left-0 h-screen'}`}>
+        <div className={`sidebar ${isMobileView ? 'justify-evenly bottom-0 left-0 w-full bg-stone-900 shadow-stone-50 overflow-show' : 'flex-col top-0 left-0 h-screen bg-stone-900 px-2 border-r-2 border-opacity-20 border-white '}`}>
             <div className={`p-2 shadow-lg ${isMobileView ? 'flex flex-row justify-evenly' : 'flex flex-col'}`}>
                 <Link to="/dashboard">
                     <SideBarIcon icon={<img src={userImage} alt="User" className="rounded-full" />} text="Admin" />
                 </Link>
+                <Divider />
                 <Link to="/dashboard">
                     <SideBarIcon icon={<FaDesktop size="28" />} text="Dashboard"/>
                 </Link>
-                {/* <Divider /> */}
                 <Link to="/customers">
                     <SideBarIcon icon={<BsPeopleFill size="28" to="/customers"/>} text="Customers" onClick="/customers" />
                 </Link>
                 <Link to="/rewards">
                     <SideBarIcon icon={<FaCoins size="24" to="/rewards"/>}  text="Rewards" />
                 </Link>
-                {/* <Divider className={`${"hidden"}`} /> */}
+                <Divider className={`${"hidden"}`} />
                 <Link to="/settings">
                     <SideBarIcon icon={<BsGearFill size="22" to="/settings" />} text="Settings" />
                 </Link>

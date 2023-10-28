@@ -4,13 +4,12 @@ import Customers from './views/Customers';
 import Dashboard from './views/Dashboard';
 import Rewards from './views/Rewards';
 import './App.css';
-import Sidebar from "./components/Sidebar";
-import backgroundImage from "./assets/img/app-bg-dark.png";
 import Login from "./views/Login";
-import BottomBar from "./components/BottomBar";
 import AppHeader from "./components/AppHeader";
 import { AuthContext } from "./components/Auth";
 import Settings from "./views/Settings";
+import { ThemeContext } from "./components/ThemeProvider";
+
 
 // import Tabs from "./components/Tabs";
 const ProtectedRoute = ({ element, ...rest }) => {
@@ -21,16 +20,22 @@ const ProtectedRoute = ({ element, ...rest }) => {
 
 function App() {
 
-  
-
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth < 762);
-
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const {theme, setTheme} = useContext(ThemeContext);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
   const toggleSidebar = () => {
     const newIsCollapsed = !isCollapsed;
@@ -56,17 +61,8 @@ function App() {
     
     <Router>
     <AppHeader isMobileView={isMobileView} isCollapsed={isCollapsed}/>
-    
-  {/* {!isModalOpen && !isMobileView && <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} refetchTrigger={refetchTrigger} onRefetch={handleRefetch} className="sidebar-footer"/>} */}
-  {/* {isMobileView && <BottomBar />} */}
-    {/* {!isModalOpen && isMobileView && <Tabs  refetchTrigger={refetchTrigger} onRefetch={handleRefetch}/>} */}
     <div className="app-container"> 
-    <img src= {backgroundImage}  alt="Background" className="background-image bg-grid-slate-900/[0.04]" />
-{/* <button className={`fixed top-0 right-0 m-3 cursor-pointer px-3 py-1 text-xl leading-none bg-transparent  rounded ${isCollapsed ? 'text-stone-700' : 'text-stone-600'} z-0`} 
-      type="button"
-      onClick={toggleSidebar}>
-      <i className={`fas ${isCollapsed ? 'fa-bars' : 'fa-times'}`}></i>
-    </button> */}
+    {/* <img src= {backgroundImage}  alt="Background" className="background-image bg-grid-slate-900/[0.04]" /> */}
     <div className={`main-content ${isCollapsed ? '' : 'open'}`}>
         <Routes>
           <Route path="/" element={<ProtectedRoute element={<Dashboard refetchTrigger={refetchTrigger} onRefetch={handleRefetch} />} />} />
@@ -78,6 +74,7 @@ function App() {
         </Routes>
       </div>
     </div>
+
 </Router>
   );
 }

@@ -74,7 +74,7 @@ function CreateCustomerForm({onSuccess, onError, onRefetch}) {
 
     return (
         <>
-            <div className='m-2 lg:columns-2 sm:flex-auto md:flex-shrink items-center sm:columns-1'>
+            <div className='m-2 lg:columns-2 md:flex-shrink sm:columns-1 w-full' >
                 <form onSubmit={handleSubmit} className='w-full max-w-lg'>
                 <input type="text" name="firstName" id="firstName"
                     value={formData.firstName}

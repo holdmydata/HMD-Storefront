@@ -51,7 +51,7 @@ function CustomerResults({refetchTrigger}) {
   
 
   return (
-    <div className="p-4 w-auto">
+    <div className="p-4 w-auto" style={{ }}>
       <table className="table-fixed text-sm w-full  border-stone-600 divide-y divide-stone-300">
         <thead className=' shadow-inner shadow-stone-300 rounded-t-md'>
           <tr>

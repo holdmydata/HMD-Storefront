@@ -9,6 +9,7 @@ function Rewards() {
         { id: 1, name: 'Free Juice Bottle', points: 100 },
         { id: 2, name: '1/2 Off Item <$25', points: 200 },
         { id: 3, name: 'Picture on Wall', points: 300 },
+        { id: 4, name: 'Free Item <$25', points: 400}
     ];
 
     const handleEditReward = (reward) => {
@@ -58,10 +59,10 @@ function Rewards() {
                 </div>
 
                 <h2 className="text-md text-left flex flex-auto text-stone-100  font-stock uppercase font-extrabold sm:text-md ">Rewards</h2>
-                <div className="grid grid-cols-3 sm:grid-cols-2 gap-4 justify-evenly">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-evenly">
                     {rewards.map((reward) => (
                         <div key={reward.id} className="bg-white rounded-lg shadow-md p-4">
-                            <h2 className="text-lg font-medium">{reward.name}</h2>
+                            <h2 className="text-lg font-medium" style={{ backgroundColor: 'var(--bubble-bg-color)', color: 'var(--bubble-text-color)' }}>{reward.name}</h2>
                             <p className="text-gray-500">{reward.points} points</p>
                             <button
                                 className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
