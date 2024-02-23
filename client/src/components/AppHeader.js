@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import userImage from "../assets/img/team-1-800x800.jpg";
+import userImage from "../assets/img/projectImage2.png";
 import { BsPlus, BsFillLightningFill, BsGearFill, BsPeopleFill } from 'react-icons/bs';
 import { FaFire, FaDesktop, FaUser, FaCoins } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
