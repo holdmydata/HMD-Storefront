@@ -1,6 +1,6 @@
 import React from "react";
 import {Link, useLocation} from "react-router-dom";
-import userImage from "../assets/img/team-1-800x800.jpg";
+import userImage from "../assets/img/projectImage2.png";
 import CheckInForm from "./CheckInForm";
 import {Transition} from "@headlessui/react";
 
