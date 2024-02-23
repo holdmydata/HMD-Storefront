@@ -1,6 +1,6 @@
 ## Storefront
 
-Welcome to the e HMD-Storefront project!
+Welcome to the HMD-Storefront project!
 
 ![Project Image](https://meansquares.com/assets/projectImage2-e32577ca.png)
 
