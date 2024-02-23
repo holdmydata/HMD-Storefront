@@ -99,7 +99,7 @@ const typeDefs = `#graphql
     reward: Reward @relationship(type: "REDEEMED", direction: OUT)
   }`;
 
-const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "VelvetVapor2023!"), {encrypted: 'ENCRYPTION_OFF'});
+const driver = neo4j.driver("bolt://127.0.0.1:7687", neo4j.auth.basic("neo4j", "AddPWHere"), {encrypted: 'ENCRYPTION_OFF'});
 
 console.log("Driver initialized:", !! driver);
 console.log(process.env.NEO4J_URI, process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)

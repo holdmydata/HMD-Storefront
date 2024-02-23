@@ -107,7 +107,7 @@ function CheckInForm({onRefetch}) {
           placeholder="Phone Number" 
           value={phoneNumber} 
           onChange={(e) => setPhoneNumber(e.target.value)}
-          className="p-2 border flex-grow max-w-fullborder-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus: ring-purple-900 w-full pl-10"
+          className="p-2 border flex-grow max-w-fullborder-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 relative bg-white rounded text-sm shadow outline-none focus:outline-none focus: ring-purple-900 w-full pl-10 dark: text-black"
         />
         <div className="flex justify-end"> 
         <button type="submit" onClick={handleSubmit} className="bg-stone-50 hover:bg-stone-200 text-stone-800 hover:text-stone-700 rounded w-auto py-2 px-4 font-bold mt-2">Check In</button>
