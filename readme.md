@@ -6,7 +6,7 @@ Welcome to the e HMD-Storefront project!
 
 ### Introduction
 
-The HMD-Storefront project is a web-based storefront application built using modern technologies such as React, Redux, and Node.js. The goal is to provide to small businesses a free/open/locally connected platform to sell their products and services, gather data and insights, and connect with their customers just as well as the big guys.
+The HMD-Storefront project is a web-based storefront application built using modern technologies such as React, Neo4J, and Node.js. The goal is to provide to small businesses a free/open/locally connected platform to sell their products and services, gather data and insights, and connect with their customers just as well as the big guys.
 
 
 ### Features
